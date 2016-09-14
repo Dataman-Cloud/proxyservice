@@ -1,0 +1,83 @@
+sampleeureka:
+  image: index.shurenyun.com/library/sample-hystrix-eureka:1.0.1-SNAPSHOT
+  ports:
+   - "$EUREKA_PORT$:8761"
+
+sampleconfig:
+  image: index.shurenyun.com/library/sample-hystrix-config:1.0.1-SNAPSHOT
+  links:
+    - sampleeureka
+  environment:
+     eureka.host: sampleeureka
+     eureka.port: $EUREKA_PORT$
+     server.port: $SERVER_PORT$
+  ports:
+    - "$CONFIG_PORT$:8888"
+
+sampleservice:
+  image: index.shurenyun.com/library/sample-hystrix-service:1.0.1-SNAPSHOT
+  links:
+    - sampleeureka
+    - sampleconfig
+  environment:
+     eureka.host: sampleeureka
+     eureka.port: $EUREKA_PORT$
+     server.port: $SERVER_PORT$
+     spring.profiles.active: docker
+  ports:
+    - "$SERVICE_PORT_1$:8080"
+
+sampleaggregate1:
+  image: index.shurenyun.com/library/sample-hystrix-aggregate:1.0.1-SNAPSHOT
+  links:
+    - sampleeureka
+    - sampleconfig
+    - sampleservice
+  environment:
+     eureka.host: sampleeureka
+     eureka.port: $EUREKA_PORT$
+     server.port: $SERVER_PORT$
+     spring.profiles.active: docker
+
+sampleaggregate2:
+  image: index.shurenyun.com/library/sample-hystrix-aggregate:1.0.1-SNAPSHOT
+  links:
+    - sampleeureka
+    - sampleconfig
+    - sampleservice
+  environment:
+     eureka.host: sampleeureka
+     eureka.port: $EUREKA_PORT$
+     server.port: $SERVER_PORT$
+     spring.profiles.active: docker
+
+samplegateway:
+  image: index.shurenyun.com/library/sample-hystrix-gateway:1.0.1-SNAPSHOT
+  links:
+    - sampleeureka
+    - sampleconfig
+    - sampleaggregate1
+    - sampleaggregate2
+  environment:
+     eureka.host: sampleeureka
+     eureka.port: $EUREKA_PORT$
+     server.port: $SERVER_PORT$
+     spring.profiles.active: docker
+  ports:
+    - "$SERVER_PORT$:8080"
+
+samplemonitor:
+  image: index.shurenyun.com/library/sample-hystrix-monitor:1.0.1-SNAPSHOT
+  links:
+    - sampleeureka
+    - sampleconfig
+    - sampleservice
+    - sampleaggregate1
+    - sampleaggregate2
+  environment:
+     eureka.host: sampleeureka
+     eureka.port: $EUREKA_PORT$
+     server.port: $SERVER_PORT$
+     spring.profiles.active: docker
+  ports:
+    - "$SERVICE_PORT_2$:8080"
