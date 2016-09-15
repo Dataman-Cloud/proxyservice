@@ -13,7 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.yaml.snakeyaml.Yaml;
-import com.shurenyun.proxyservice.domain.ServiceCompose;
+
+import com.shurenyun.proxyservice.entity.ServiceCompose;
 
 @Component
 public class YamlFileParser {
@@ -26,7 +27,7 @@ public class YamlFileParser {
 	 * @param yaml_file_name
 	 * @return
 	 */
-	public Map<String,Map<String,Object>> readFromFile(String yaml_file_name) {	
+	public Map<String,Map<String,Object>> load(String yaml_file_name) {	
 		
 		File yaml_file = new File(yaml_file_name);
 		InputStream is = null;
@@ -35,9 +36,9 @@ public class YamlFileParser {
 			Yaml yaml = new Yaml();
 			
 			@SuppressWarnings("unchecked")
-			Map<String,Map<String,Object>> service_yaml  = (Map<String,Map<String,Object>>) yaml.load(is);
+			Map<String,Map<String,Object>> serviceObj  = (Map<String,Map<String,Object>>) yaml.load(is);
 			is.close();
-			return service_yaml;
+			return serviceObj;
 		} catch (FileNotFoundException e) {
 			log.error("Unable to open file '" +yaml_file_name+ "'");      
 			e.printStackTrace();
@@ -52,20 +53,20 @@ public class YamlFileParser {
 	 * parse yaml file.
 	 * @param service_yaml
 	 */
-	public Map<String,ServiceCompose> parse(Map<String,Map<String,Object>> service_yaml){
+	public Map<String,ServiceCompose> parse(Map<String,Map<String,Object>> serviceObj){
 		
 			Map<String,ServiceCompose> services = new HashMap<String,ServiceCompose>();
 			
 			//get service map.
-			for (String service_name : service_yaml.keySet()) {
+			for (String service_name : serviceObj.keySet()) {
 				//service_name
-				Map<String,Object> service_config = service_yaml.get(service_name);
+				Map<String,Object> service_config = serviceObj.get(service_name);
 				ServiceCompose servicecompose = new ServiceCompose();
 				for(String conf_name: service_config.keySet()) {
 					//image
 					if(conf_name.equals("image")) {
 						String image = service_config.get(conf_name).toString();
-						servicecompose.setImage(image);
+						servicecompose.setImage(image.replaceAll(" ", ""));
 					}
 					
 					//environment
@@ -76,7 +77,7 @@ public class YamlFileParser {
 						List<String> env_list  = new ArrayList<String>();
 						String[] env_array = env.split(",");
 						for(int i=0;i<env_array.length;i++) {
-							env_list.add(env_array[i]);
+							env_list.add(env_array[i].replaceAll(" ", ""));
 						}
 						servicecompose.setEnv(env_list);
 					}
@@ -88,7 +89,7 @@ public class YamlFileParser {
 						List<String> links_list  = new ArrayList<String>();
 						String[] links_array = links.split(",");
 						for(int i=0;i<links_array.length;i++) {
-							links_list.add(links_array[i]);
+							links_list.add(links_array[i].replaceAll(" ", ""));
 						}
 						servicecompose.setLinks(links_list);
 					}
@@ -100,7 +101,7 @@ public class YamlFileParser {
 						List<String> ports_list = new ArrayList<String>();
 						String[] ports_array = ports.split(",");
 						for(int i=0;i<ports_array.length;i++) {
-							ports_list.add(ports_array[i]);
+							ports_list.add(ports_array[i].replaceAll(" ", ""));
 						}
 						servicecompose.setPorts(ports_list);
 					}
@@ -112,7 +113,7 @@ public class YamlFileParser {
 						List<String> volume_list = new ArrayList<String>();
 						String[] volume_array = volumes.split(",");
 						for(int i=0;i<volume_array.length;i++) {
-							volume_list.add(volume_array[i]);
+							volume_list.add(volume_array[i].replaceAll(" ", ""));
 						}
 						servicecompose.setVolumes(volume_list);
 					}
@@ -120,7 +121,6 @@ public class YamlFileParser {
 				services.put(service_name, servicecompose);
 			}
 			printYamlMap(services);
-			
 			return services;
 	}
 	

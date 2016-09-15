@@ -3,12 +3,12 @@ package com.shurenyun.proxyservice.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shurenyun.proxyservice.controller.vo.AddStackRequest;
-import com.shurenyun.proxyservice.domain.ServiceCompose;
-import com.shurenyun.proxyservice.domain.EQImage;
-import com.shurenyun.proxyservice.service.CreateDabCompose;
-import com.shurenyun.proxyservice.service.RetrieveDockercomposeTemplate;
-import com.shurenyun.proxyservice.service.RetrieveNotOccupiedPort;
-import com.shurenyun.proxyservice.service.ShurenyunApiRequestForward2;
+import com.shurenyun.proxyservice.entity.EQImage;
+import com.shurenyun.proxyservice.entity.ServiceCompose;
+import com.shurenyun.proxyservice.service.DabCompose;
+import com.shurenyun.proxyservice.service.DockerComposeTemplate;
+import com.shurenyun.proxyservice.service.DynamicResource;
+import com.shurenyun.proxyservice.service.DMApiRequestForward;
 
 import java.util.List;
 import java.util.Map;
@@ -34,16 +34,16 @@ public class StackController {
  	private final Logger log = LoggerFactory.getLogger(this.getClass());
  	
  	@Autowired
-	RetrieveDockercomposeTemplate retrieveDockercomposeTemplate;
+	DockerComposeTemplate dockerComposeTemplate;
 	
  	@Autowired
-	RetrieveNotOccupiedPort retrieveNotOccupiedPort;
+	DynamicResource dynamicResource;
 
 	@Autowired
-	CreateDabCompose createDabCompose;
+	DabCompose dabCompose;
 	
 	@Autowired
-	ShurenyunApiRequestForward2 shurenyunApiRequestForward2;
+	DMApiRequestForward DMApiRequestForward;
 
 	@RequestMapping(
 		method = RequestMethod.POST,
@@ -60,23 +60,22 @@ public class StackController {
 		log.debug("POST /stack "+inputmessage);
 		
 		//retrieve docker compose template.
-		Map<String,ServiceCompose> docker_compose_template_yaml = retrieveDockercomposeTemplate.doGet(svn_url);
+		Map<String,ServiceCompose> services = dockerComposeTemplate.doGet(svn_url);
 
 		//need to use lock, when retrieve free ports for services.
 		Lock lock = new ReentrantLock();
 		lock.lock();
 		
 		//get port. 
-		List<Long> not_occupied_ports = retrieveNotOccupiedPort.getPorts(); 
+		List<Long> notOccupiedPorts = dynamicResource.getPorts(); 
 		
 		//create dab compose.
-		createDabCompose.doCreate(docker_compose_template_yaml,images, not_occupied_ports);
-		String dab = createDabCompose.getDab();
+		String dab = dabCompose.doCreate(services,images, notOccupiedPorts);
 			
 		//invoke stack API.
 		String result = "";
 		try{
-			result = shurenyunApiRequestForward2.createStack(stack_name,dab);
+			result = DMApiRequestForward.createStack(stack_name,dab);
 		}catch(Exception e) {
 			result = e.getMessage();
 		}
@@ -96,7 +95,7 @@ public class StackController {
 		String result = "";
 		try{
 			//invoke inspect stack API.
-			shurenyunApiRequestForward2.searchStack(stack_name);
+			DMApiRequestForward.searchStack(stack_name);
 		}catch(Exception e){
 			result = e.getMessage();
 		}
@@ -112,7 +111,7 @@ public class StackController {
 			String result = "";
 			try{
 				//invoke delete stack API.
-				result = shurenyunApiRequestForward2.delStack(stack_name);
+				result = DMApiRequestForward.delStack(stack_name);
 			}catch(Exception e){
 				result = e.getMessage();
 			}

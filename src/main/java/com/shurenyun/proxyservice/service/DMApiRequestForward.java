@@ -12,35 +12,25 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shurenyun.proxyservice.service.entity.SryOccupiedPortResponse;
-import com.shurenyun.proxyservice.util.ServiceProperties;
+import com.shurenyun.proxyservice.util.Properties;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 @Service
-public class ShurenyunApiRequestForward2 {
+public class DMApiRequestForward {
 	
 	// Define the logger object for this class
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	  	
 	@Autowired
-	private ServiceProperties configuration;
+	private Properties configuration;
 	
 	/**
 	 * create stack.
-	 * @param token
-	 * @param cluster_id
 	 * @param stack_name
-	 * @param dockercompose
-	 * @param shurenyuncompose
-	 */
+	 * @param dab
+	*/
 	public String createStack(String stack_name,String dab){
 
 		RestTemplate createStackRestTemplate = new RestTemplate();

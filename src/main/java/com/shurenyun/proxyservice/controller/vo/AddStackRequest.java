@@ -2,13 +2,12 @@ package com.shurenyun.proxyservice.controller.vo;
 
 import java.util.List;
 
-import com.shurenyun.proxyservice.domain.EQImage;
+import com.shurenyun.proxyservice.entity.EQImage;
 
 public class AddStackRequest {
 
 	String svn_url;
 	String stack_name;
-	String cluster_id;
 	List<EQImage> images;
 	
 	public String getSvn_url() {
@@ -22,12 +21,6 @@ public class AddStackRequest {
 	}
 	public void setStack_name(String stack_name) {
 		this.stack_name = stack_name;
-	}
-	public String getCluster_id() {
-		return cluster_id;
-	}
-	public void setCluster_id(String cluster_id) {
-		this.cluster_id = cluster_id;
 	}
 	public List<EQImage> getImages() {
 		return images;

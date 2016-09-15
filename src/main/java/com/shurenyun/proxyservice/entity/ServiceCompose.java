@@ -1,21 +1,21 @@
-package com.shurenyun.proxyservice.domain;
+package com.shurenyun.proxyservice.entity;
 
 import java.util.List;
 
 public class ServiceCompose {
 	
-	private String service_name;
+	private String name;
 	private String image;
 	private List<String> links;
 	private List<String> ports;
 	private List<String> volumes;
 	private List<String> env;
 	
-	public String getService_name() {
-		return service_name;
+	public String getName() {
+		return name;
 	}
-	public void setService_name(String service_name) {
-		this.service_name = service_name;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getImage() {
 		return image;

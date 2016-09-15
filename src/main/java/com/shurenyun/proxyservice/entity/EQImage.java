@@ -1,4 +1,4 @@
-package com.shurenyun.proxyservice.domain;
+package com.shurenyun.proxyservice.entity;
 
 public class EQImage {
 	

@@ -3,19 +3,14 @@ package com.shurenyun.proxyservice.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RetrieveNotOccupiedPort {
+public class DynamicResource {
 	
-	// Define the logger object for this class
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
-
 	@Autowired
-	ShurenyunApiRequestForward2 shurenyunApiRequestForward2;
+	DMApiRequestForward shurenyunApiRequestForward2;
 	
 	//get port typically from 32768 to 61000. Invoke shurenyun's api to decide if occupied.
 	public List<Long> getPorts() {
