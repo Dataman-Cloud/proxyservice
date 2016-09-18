@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.shurenyun.proxyservice.entity.ServiceCompose;
 import com.shurenyun.proxyservice.util.YamlFileParser;
+import com.shurenyun.proxyservice.util.Properties;
+
 
 @Service
 public class DockerComposeTemplate {
@@ -21,6 +23,9 @@ public class DockerComposeTemplate {
 
 	@Resource
 	private YamlFileParser yamlfileParser;
+	
+	@Resource
+	private Properties configuration;
 	
 	
 	/**
@@ -47,7 +52,7 @@ public class DockerComposeTemplate {
 		//TODO:get docker compose template from SVN and save docker compose template to local.
 		String[] svn_split = svn_url.split("/");
 		String svn_app_name = svn_split[svn_split.length-1];
-		template_file_name = "/data/"+svn_app_name+"/docker-compose-template.yml";
+		template_file_name = this.configuration.getDatadir()+ "/" +svn_app_name+"/docker-compose-template.yml";
 	}
 	
 	/**

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class Properties {
 	private String api;
 	private String swarmmgt;
+	private String datadir;
 	
 	public String getApi() {
 		return api;
@@ -20,6 +21,12 @@ public class Properties {
 	}
 	public void setSwarmmgt(String swarmmgt) {
 		this.swarmmgt = swarmmgt;
+	}
+	public String getDatadir() {
+		return datadir;
+	}
+	public void setDatadir(String datadir) {
+		this.datadir = datadir;
 	}
 	
 	

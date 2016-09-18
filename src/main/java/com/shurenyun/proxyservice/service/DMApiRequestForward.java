@@ -1,5 +1,6 @@
 package com.shurenyun.proxyservice.service;
 
+import org.json.simple.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class DMApiRequestForward {
 		createStackRestTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
 		createStackRestTemplate.getMessageConverters().add(new StringHttpMessageConverter());
         
-		String uri = new String(this.configuration.getApi()+"/stacks");
+		String uri = new String(this.configuration.getApi()+"/api/v1/stacks");
 		
 		HttpHeaders requestHeaders = new HttpHeaders();
 		
@@ -135,7 +136,9 @@ public class DMApiRequestForward {
 		ResponseEntity<String> responseEntity = sryOccupiedPortRestTemplate.exchange(uri, HttpMethod.GET, request, String.class);
 		log.debug(responseEntity.getBody().toString());
 		List<Long> list = new ArrayList<Long>();
-//		JSONArray services = responseEntity.getBody();
+		
+		
+		//JSONArray services = responseEntity.getBody();
 //		for(int i=0;i< services.size();i++) {
 //			JSONObject innerObj = (JSONObject) services.get(i); 
 //			JSONObject endpoint = (JSONObject)innerObj.get("Endpoint");

@@ -95,7 +95,7 @@ public class StackController {
 		String result = "";
 		try{
 			//invoke inspect stack API.
-			DMApiRequestForward.searchStack(stack_name);
+			result = DMApiRequestForward.searchStack(stack_name);
 		}catch(Exception e){
 			result = e.getMessage();
 		}
