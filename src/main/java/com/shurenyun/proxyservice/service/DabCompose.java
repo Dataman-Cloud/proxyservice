@@ -190,8 +190,8 @@ public class DabCompose {
 				portsIndab += "{"+
 				 "\"Name\": \"pbport\","+
 		         "\"Protocol\": \"tcp\","+
-		         "\"TargetPort\": \""+servicePort.split(":")[0]+"\","+
-		         "\"PublishedPort\": \""+servicePort.split(":")[1]+"\","+
+		         "\"TargetPort\": "+servicePort.split(":")[1]+","+
+		         "\"PublishedPort\": "+servicePort.split(":")[0]+""+
 		         "}";
 				
 				if(portNum<serviceCompose.getPorts().size()-1) {
