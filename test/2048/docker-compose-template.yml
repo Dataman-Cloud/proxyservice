@@ -1,0 +1,4 @@
+2048:
+  image: "blackicebird/2048"
+  ports:
+   - "$APP_PORT$:80"
