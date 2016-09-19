@@ -147,6 +147,7 @@ public class DMApiRequestForward {
 			for(int i=0;i< services.size();i++) {
 				JSONObject innerObj = (JSONObject) parser.parse(services.get(i).toString()); 
 				JSONObject endpoint = (JSONObject)parser.parse(innerObj.get("Endpoint").toString());
+				if (endpoint.get("Ports") == null) continue;
 				JSONArray ports = (JSONArray)parser.parse(endpoint.get("Ports").toString());
 				for (int x = 0; x < ports.size(); x++) {
 					JSONObject port = (JSONObject)parser.parse(ports.get(x).toString());
